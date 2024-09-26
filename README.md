@@ -19,13 +19,10 @@ _Features_:
   - [stm32f103c6](https://www.alldatasheet.com/datasheet-pdf/pdf/201588/STMICROELECTRONICS/STM32F103C6.html) Microprocessor
   - 32kB Flash, 10kB SRAM, ARM Core
 
----
-**NOTE**
-
+_Note_:
 The board seems to be designed for a different µC Version (most likely stm32f103c8).
 Therefore the SPI connection to the adf4351 must be [bit banged](https://en.wikipedia.org/wiki/Bit_banging). 
 Or there is a trick I'm not aware of. I am grateful for every hint.
---- 
 
 ## Prerequisities
 
@@ -40,6 +37,7 @@ Or there is a trick I'm not aware of. I am grateful for every hint.
 
 _Check_:
 
+```
     $ st-info --probe
     Found 1 stlink programmers
     version:    V2J45S7
@@ -48,7 +46,7 @@ _Check_:
     sram:       10240
     chipid:     0x123
     dev-type:   STM32F1xx_LD
----
+```
 
 ## Act I - Permanent Signal
 
@@ -61,8 +59,7 @@ _Use Case_: Generate a fixed 42MHz RF signal
   - Src/sa_35m_4400m_act01.c
 - Include procedures into init/loop blocks of main.c:
 
-
-    ...
+```
     /* USER CODE BEGIN 2 */
     sa_35m_4400m_Init();
     /* USER CODE END 2 */
@@ -74,12 +71,14 @@ _Use Case_: Generate a fixed 42MHz RF signal
       sa_35m_4400m_Loop();
       /* USER CODE END WHILE */
     ...
+```
 
 - Build your project's ARM target
 - Flash (and debug)
 
-
+```
     $ /usr/bin/openocd -s /usr/share/openocd/scripts -f ../openocd.cfg -c "tcl_port disabled" -c "gdb_port disabled" -c "tcl_port disabled" -c "program \"$PWD/cmake-build-debug/sa_35m_4400m_act01.elf\"" -c reset -c shutdown
+```
 
 - Have fun with a nice and crisp 42MHz RF signal!
    
