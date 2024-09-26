@@ -55,30 +55,32 @@ _Check_:
 _Use Case_: Generate a fixed 42MHz RF signal
 
 - Open IDE project (subdir: _sa_35m_4400_act01_)
-- Open ioc file with STM32CubeMX and generate code
+- Open ioc file with STM32CubeMX and generate code _or_ (if µC different than stm32f103c6) create a new ioc for your µC
 - Include C and Header files to your project
   - Inc/sa_35m_4400m_act01.h 
   - Src/sa_35m_4400m_act01.c
 - Include procedures into init/loop blocks of main.c:
- 
 
-    void sa_35m_4400m_Init(void);
-    void sa_35m_4400m_Loop(void);
+
+    ...
+    /* USER CODE BEGIN 2 */
+    sa_35m_4400m_Init();
+    /* USER CODE END 2 */
+    
+    /* Infinite loop */
+    /* USER CODE BEGIN WHILE */
+    while (1)
+    {
+      sa_35m_4400m_Loop();
+      /* USER CODE END WHILE */
+    ...
 
 - Build your project's ARM target
 - Flash (and debug)
 
 
-    $ /usr/bin/openocd -s /usr/share/openocd/scripts -f ../openocd.cfg -c "tcl_port disabled" -c "gdb_port disabled" -c "tcl_port disabled" -c "program \"./sa_35m_4400m_act01/cmake-build-debug/sa_35m_4400m_act01.elf\"" -c reset -c shutdown
+    $ /usr/bin/openocd -s /usr/share/openocd/scripts -f ../openocd.cfg -c "tcl_port disabled" -c "gdb_port disabled" -c "tcl_port disabled" -c "program \"$PWD/cmake-build-debug/sa_35m_4400m_act01.elf\"" -c reset -c shutdown
 
 - Have fun with a nice and crisp 42MHz RF signal!
    
-   ![signal](./media/osc-signal.png)
-
----
-**NOTE**
-
-Most likely you own a different µC version...
-...then you have to generate a _new_ STM32CubeMX project file! 
---- 
- 
+   ![signal](./media/osc-signal.png) 
